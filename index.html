@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="S&F Services - Premium Gebrauchtwagen, Import-Export und Automotive Services">
+    <link rel="shortcut icon" href="static/src/media/imgs/logo/sf-logo.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>S&F Services - Premium Automotive Excellence</title>
+
+    <style>
+        /* ============================================
+           GLOBAL STYLES & RESET
+           ============================================ */
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #e94560;
+            --light-color: #f1f1f1;
+            --text-color: #333;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ============================================
+           LOADING SCREEN
+           ============================================ */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
+        .navbar {
+            padding: 1rem 0;
+            background: transparent;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #fff, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            margin: 0 1rem;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(22, 33, 62, 0.7));
+            z-index: 2;
+        }
+
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 3;
+            color: white;
+            width: 90%;
+            max-width: 900px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.3s;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+        }
+
+        .cta-button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            background: var(--accent-color);
+            border: none;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.9s;
+            transition: var(--transition);
+        }
+
+        .cta-button:hover {
+            background: #d13752;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.4);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            color: white;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                transform: translateY(30px);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* ============================================
+           SECTION STYLES
+           ============================================ */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+        }
+
+        .section-subtitle {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        /* ============================================
+           APPOINTMENT SECTION
+           ============================================ */
+        .appointment-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .brand-selector-wrapper {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-selector {
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .brand-selector:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(233, 69, 96, 0.25);
+        }
+
+        /* ============================================
+           VEHICLE CARDS
+           ============================================ */
+        .arrivals-section {
+            background: white;
+        }
+
+        .vehicle-card-wrapper {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInCard 0.6s ease forwards;
+        }
+
+        .vehicle-card-wrapper:nth-child(1) { animation-delay: 0.1s; }
+        .vehicle-card-wrapper:nth-child(2) { animation-delay: 0.2s; }
+        .vehicle-card-wrapper:nth-child(3) { animation-delay: 0.3s; }
+        .vehicle-card-wrapper:nth-child(4) { animation-delay: 0.4s; }
+        .vehicle-card-wrapper:nth-child(5) { animation-delay: 0.5s; }
+        .vehicle-card-wrapper:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInCard {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .vehicle-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .vehicle-image {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .vehicle-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .vehicle-card:hover .vehicle-image img {
+            transform: scale(1.1);
+        }
+
+        .vehicle-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .vehicle-card:hover .vehicle-overlay {
+            opacity: 1;
+        }
+
+        .view-details {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .view-details:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .vehicle-info {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .vehicle-info h4 {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ============================================
+           ABOUT SECTION
+           ============================================ */
+        .about-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        }
+
+        .about-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        /* ============================================
+           IMPORT EXPORT SECTION
+           ============================================ */
+        .import-export-section {
+            background: white;
+        }
+
+        .service-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .service-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .service-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(26, 26, 46, 0.95), transparent);
+            color: white;
+        }
+
+        .service-card-overlay h4 {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        /* ============================================
+           LOGISTICS SECTION
+           ============================================ */
+        .logistics-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .logistics-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logistics-card h3 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .logistics-card p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .info-box:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .info-box h5 {
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .info-box i {
+            margin-right: 10px;
+        }
+
+        .important-info {
+            background: rgba(233, 69, 96, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .important-info h4 {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .country-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .country-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+        }
+
+        .country-list li i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .country-list a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .country-list a:hover {
+            color: var(--accent-color);
+        }
+
+        /* ============================================
+           CONTACT SECTION
+           ============================================ */
+        .contact-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-item i {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+
+        .contact-item h5 {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item p {
+            margin: 0;
+            color: #666;
+        }
+
+        .contact-item a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-item a:hover {
+            color: var(--primary-color);
+        }
+
+        .contact-form-wrapper {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-form-wrapper h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .form-control {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(233, 69, 96, 0.25);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* ============================================
+           BACK TO TOP BUTTON
+           ============================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #d13752;
+            transform: translateY(-5px);
+        }
+
+        /* ============================================
+           NOTIFICATION STYLES
+           ============================================ */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification-content i {
+            font-size: 1.5rem;
+        }
+
+        .form-control.is-valid {
+            border-color: #28a745;
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        /* ============================================
+           MODAL STYLES
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-modal:hover {
+            background: #d13752 !important;
+            transform: rotate(90deg);
+            transition: all 0.3s ease;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.4rem;
+            }
+
+            .nav-link {
+                margin: 0.5rem 0;
+            }
+
+            .about-card,
+            .logistics-card,
+            .contact-form-wrapper {
+                padding: 2rem;
+            }
+
+            .vehicle-image,
+            .service-card {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .cta-button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+
+            .about-card,
+            .logistics-card,
+            .contact-form-wrapper {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="#page-top">
+                <span class="brand-text">S&F SERVICES</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#gebrauchtwagen">Gebrauchtwagen</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#import-export">Import-Export</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#angebote">Angebote</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#service">Service</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kontakt">Kontakt</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section" id="page-top">
+        <div class="hero-overlay"></div>
+        <div class="hero-slider">
+            <div class="hero-slide active">
+                <img src="static/src/media/imgs/audi-a8-w12.png" alt="Luxury Vehicle">
+            </div>
+            <div class="hero-slide">
+                <img src="static/src/media/imgs/ml63.png" alt="Premium SUV">
+            </div>
+            <div class="hero-slide">
+                <img src="static/src/media/imgs/q7.png" alt="Executive Car">
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title animate-text">Willkommen bei S&F Services</h1>
+            <p class="hero-subtitle">Premium Fahrzeuge & Professionelle Import-Export Lösungen</p>
+            <a href="#angebote" class="btn btn-primary btn-lg cta-button">Entdecken Sie Unsere Angebote</a>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- Quick Appointment Section -->
+    <section class="appointment-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="section-title">Online Termin Vereinbarung</h2>
+                    <p class="text-muted">Buchen Sie jetzt Ihren persönlichen Beratungstermin</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="brand-selector-wrapper">
+                        <label for="brandSelector" class="form-label">Hier zu Ihrem Wunschfahrzeug</label>
+                        <select class="form-select brand-selector" id="brandSelector">
+                            <option value="">Wählen Sie eine Marke</option>
+                            <option value="alphar">ALPHA ROMEO</option>
+                            <option value="audi">AUDI</option>
+                            <option value="bmw">BMW</option>
+                            <option value="chevrolet">CHEVROLET</option>
+                            <option value="chrysler">CHRYSLER</option>
+                            <option value="citroen">CITROEN</option>
+                            <option value="cupra">CUPRA</option>
+                            <option value="dacia">DACIA</option>
+                            <option value="fiat">FIAT</option>
+                            <option value="ford">FORD</option>
+                            <option value="jaguar">JAGUAR</option>
+                            <option value="jeep">JEEP</option>
+                            <option value="honda">HONDA</option>
+                            <option value="hyundai">HYUNDAI</option>
+                            <option value="kia">KIA</option>
+                            <option value="landrover">LAND ROVER</option>
+                            <option value="lexus">LEXUS</option>
+                            <option value="mazda">MAZDA</option>
+                            <option value="mercedes">MERCEDES-BENZ</option>
+                            <option value="mini">MINI COOPER</option>
+                            <option value="mitsubishi">MITSUBISHI</option>
+                            <option value="nissan">NISSAN</option>
+                            <option value="opel">OPEL</option>
+                            <option value="peugeot">PEUGEOT</option>
+                            <option value="porsche">PORSCHE</option>
+                            <option value="renault">RENAULT</option>
+                            <option value="seat">SEAT</option>
+                            <option value="skoda">ŠKODA</option>
+                            <option value="subaru">SUBARU</option>
+                            <option value="toyota">TOYOTA</option>
+                            <option value="volkswagen">VOLKSWAGEN</option>
+                            <option value="volvo">VOLVO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals Section -->
+    <section class="arrivals-section py-5" id="angebote">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Neuheiten Eintreffen der Woche</h2>
+            <div class="row g-4" id="vehicleGrid">
+                <div class="col-md-6 col-lg-4 vehicle-card-wrapper">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="static/src/media/imgs/cupra.png" alt="Cupra">
+                            <div class="vehicle-overlay">
+                                <button class="btn btn-light view-details">Details Ansehen</button>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>CUPRA Premium</h4>
+                            <p class="text-muted">Sportlich & Elegant</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 vehicle-card-wrapper">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="static/src/media/imgs/retro.png" alt="Retro Classic">
+                            <div class="vehicle-overlay">
+                                <button class="btn btn-light view-details">Details Ansehen</button>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>Retro Classic</h4>
+                            <p class="text-muted">Zeitloses Design</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 vehicle-card-wrapper">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="static/src/media/imgs/glc.png" alt="Mercedes GLC">
+                            <div class="vehicle-overlay">
+                                <button class="btn btn-light view-details">Details Ansehen</button>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>Mercedes GLC</h4>
+                            <p class="text-muted">Luxus SUV</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 vehicle-card-wrapper">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="static/src/media/imgs/audi-a8-w12.png" alt="Audi A8 W12">
+                            <div class="vehicle-overlay">
+                                <button class="btn btn-light view-details">Details Ansehen</button>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>Audi A8 W12</h4>
+                            <p class="text-muted">Executive Limousine</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 vehicle-card-wrapper">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="static/src/media/imgs/ml63.png" alt="Mercedes ML63 AMG">
+                            <div class="vehicle-overlay">
+                                <button class="btn btn-light view-details">Details Ansehen</button>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>Mercedes ML63 AMG</h4>
+                            <p class="text-muted">Performance SUV</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 vehicle-card-wrapper">
+                    <div class="vehicle-card">
+                        <div class="vehicle-image">
+                            <img src="static/src/media/imgs/q7.png" alt="Audi Q7">
+                            <div class="vehicle-overlay">
+                                <button class="btn btn-light view-details">Details Ansehen</button>
+                            </div>
+                        </div>
+                        <div class="vehicle-info">
+                            <h4>Audi Q7</h4>
+                            <p class="text-muted">Premium SUV</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section py-5" id="service">
+        <div class="container">
+            <div class="about-card">
+                <h2 class="section-title text-center mb-4">SYLLA & FAMILIE SERVICE</h2>
+                <h3 class="text-center mb-4 text-primary">Starke Gruppe – Starke Leistung</h3>
+                <p class="lead text-center mb-5">
+                    Autokauf mit Qualität und Top-Service für PKW und Nutzfahrzeuge<br>
+                    Internationaler Partner im Import und Export von Containern, Fahrzeugen<br>
+                    und anderen unterschiedlichen Produkten.
+                </p>
+                <div class="row mt-5">
+                    <div class="col-lg-12">
+                        <p class="about-text">
+                            An 5 Standorten im norddeutschen Raum bietet <strong>S & F Services</strong> in seinen Häusern eine große Auswahl 
+                            verschiedener Neuwagen von <em><strong>Volkswagen Nutzfahrzeuge, Audi, Škoda, Seat, Cupra, Mercedes, Toyota, Opel, 
+                            Porsche bis Amerikanische Fahrzeugen.</strong></em> Das Angebot umfasst darüber hinaus sowohl Gebraucht-, Dienst- und Jahreswagen 
+                            als auch ein breites Spektrum an Nutzfahrzeugen.
+                        </p>
+                        <p class="about-text">
+                            In modernen Werkstätten erhalten Kunden ein umfangreiches Servicepaket aus Original-Ersatzteilen der einzelnen Hersteller, 
+                            Zubehör sowie fachkundigen Inspektionen und HU-Abnahme. Attraktive Finanz- und Versicherungsdienstleistungen sowie ein 
+                            hauseigener Mietwagen-Service, <strong>Import Export im Bereich Automobile, Container mit verschiedener Ware</strong> 
+                            runden das Angebot der <strong>S & F Services</strong> Gruppe ab.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Import Export Section -->
+    <section class="import-export-section py-5" id="import-export">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Import & Export-Dienstleistungen</h2>
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <img src="static/src/media/imgs/container1.png" alt="Container Services">
+                        <div class="service-card-overlay">
+                            <h4>Container Services</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <img src="static/src/media/imgs/leport.png" alt="Logistics">
+                        <div class="service-card-overlay">
+                            <h4>Logistik Lösungen</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <img src="static/src/media/imgs/beladung.png" alt="Loading Services">
+                        <div class="service-card-overlay">
+                            <h4>Beladung Services</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle text-center mb-5">Kunden Lieferungen</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <img src="static/src/media/imgs/auto_transport.png" alt="Auto Transport">
+                        <div class="service-card-overlay">
+                            <h4>Fahrzeugtransport</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <img src="static/src/media/imgs/auto_beladung.png" alt="Vehicle Loading">
+                        <div class="service-card-overlay">
+                            <h4>Fahrzeugbeladung</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <img src="static/src/media/imgs/auto-transport.png" alt="Delivery Services">
+                        <div class="service-card-overlay">
+                            <h4>Lieferung Services</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Logistics Info Section -->
+    <section class="logistics-section py-5">
+        <div class="container">
+            <div class="logistics-card">
+                <h3 class="mb-4">Demurrage & Detention - Containermiete</h3>
+                <p>
+                    Die Gebühr für die Verwendung des Containers nach Ablauf der Freizeit.
+                    Der Ablader / Befrachter / Empfänger zahlt die Containermiete für die Nutzung des Containers 
+                    an den Reeder / Verfrachter nach Ablauf der Freizeit.
+                </p>
+                <p>
+                    Die Containermiete (Demurrage & Detention) beinhaltet nicht das Lagergeld am Terminal sowie 
+                    die Serviceleistungen an Kühlcontainern (z.B. Kühlanschluss inkl. Überwachung), welche zusätzlich abgerechnet werden.
+                </p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <h5><i class="fas fa-ship"></i> Export</h5>
+                            <p>Von der Leerabnahme des Containers vom Depot bis zur Verladung auf das Schiff am Terminal.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <h5><i class="fas fa-warehouse"></i> Import</h5>
+                            <p>Vom Zeitpunkt des Löschens des Containers am Terminal bis zur Leerrückgabe des Containers am Depot.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="important-info mt-5">
+                    <h4 class="mb-4">Wichtig: Land des Lade- oder Löschhafens</h4>
+                    <p class="mb-3">(POL/POD im B/L) ist ausschlaggebend, welcher Demurrage/Detention-Tarif angewendet wird:</p>
+                    <ul class="country-list">
+                        <li><i class="fas fa-map-marker-alt"></i> Aktueller Demurrage/Detention Tarif – <a href="#">DEUTSCHLAND</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Aktueller Demurrage/Detention Tarif – <a href="#">BELGIEN</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Aktueller Demurrage/Detention Tarif – <a href="#">FRANKREICH</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Aktueller Demurrage/Detention Tarif – <a href="#">NIEDERLANDE</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section py-5" id="kontakt">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="section-title mb-4">Bitte Kontakt Aufnehmen</h2>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h5>Öffnungszeiten</h5>
+                                <p>Montag bis Freitag<br>08:00 - 18:00 Uhr</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h5>E-Mail</h5>
+                                <p><a href="mailto:info@sf-services.de">info@sf-services.de</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h5>Telefon</h5>
+                                <p><a href="tel:+49000000000">+49 (0) 000 000 000</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="contact-form-wrapper">
+                        <h3 class="mb-4">Nachricht Senden</h3>
+                        <form id="contactForm">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Ihr Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Ihre E-Mail" required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="5" placeholder="Ihre Nachricht" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Nachricht Senden</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-4 text-lg-start">
+                    <p class="mb-0">Friesland Fahrzeughaus: S&F. AG 2021</p>
+                </div>
+                <div class="col-lg-4 text-center my-3 my-lg-0">
+                    <a href="#" class="footer-link">Impressum</a>
+                    <span class="mx-2">|</span>
+                    <a href="#" class="footer-link">Datenschutz</a>
+                    <span class="mx-2">|</span>
+                    <a href="#" class="footer-link">ORD-Verordnung</a>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <p class="mb-0">
+                        © 2021 <a href="#" class="footer-link"><strong>S&F Services AG</strong></a> - Offiziell
+                    </p>
+                    <p class="mb-0 small">
+                        Powered by <a href="#" class="footer-link"><strong>SYLLA - FreeLancer</strong></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // LOADING SCREEN MANAGEMENT
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            setTimeout(() => loadingScreen.classList.add('hidden'), 1500);
+        });
+
+        // ============================================
+        // NAVIGATION SCROLL EFFECT
+        // ============================================
+        const navbar = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.pageYOffset > 100);
+        });
+
+        // ============================================
+        // SMOOTH SCROLLING
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - navbar.offsetHeight,
+                        behavior: 'smooth'
+                    });
+                    document.querySelector('.navbar-collapse')?.classList.remove('show');
+                }
+            });
+        });
+
+        // ============================================
+        // HERO SLIDER
+        // ============================================
+        class HeroSlider {
+            constructor() {
+                this.slides = document.querySelectorAll('.hero-slide');
+                this.currentSlide = 0;
+                this.init();
+            }
+            init() {
+                if (this.slides.length > 0) this.startAutoSlide();
+            }
+            showSlide(index) {
+                this.slides.forEach(slide => slide.classList.remove('active'));
+                this.currentSlide = index;
+                this.slides[this.currentSlide]?.classList.add('active');
+            }
+            nextSlide() {
+                let next = this.currentSlide + 1;
+                if (next >= this.slides.length) next = 0;
+                this.showSlide(next);
+            }
+            startAutoSlide() {
+                setInterval(() => this.nextSlide(), 5000);
+            }
+        }
+        new HeroSlider();
+
+        // ============================================
+        // BRAND SELECTOR
+        // ============================================
+        const brandSelector = document.getElementById('brandSelector');
+        if (brandSelector) {
+            brandSelector.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                    showNotification(`Sie haben ${this.options[this.selectedIndex].text} ausgewählt`);
+                }
+            });
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+
+        document.querySelectorAll('.vehicle-card-wrapper, .service-card, .contact-item').forEach(el => observer.observe(el));
+
+        // ============================================
+        // VEHICLE CARDS
+        // ============================================
+        document.querySelectorAll('.vehicle-card').forEach(card => {
+            const viewDetailsBtn = card.querySelector('.view-details');
+            if (viewDetailsBtn) {
+                viewDetailsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showVehicleDetails(card.querySelector('.vehicle-info h4').textContent);
+                });
+            }
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rotateY = (rect.width / 2 - x) / 20;
+                const rotateX = (y - rect.height / 2) / 20;
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+
+        // ============================================
+        // CONTACT FORM
+        // ============================================
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Wird gesendet...';
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                    showNotification('Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.', 'success');
+                    this.reset();
+                }, 2000);
+            });
+            contactForm.querySelectorAll('input, textarea').forEach(input => {
+                input.addEventListener('blur', () => validateInput(input));
+            });
+        }
+
+        function validateInput(input) {
+            const value = input.value.trim();
+            let isValid = true;
+            if (input.hasAttribute('required') && !value) isValid = false;
+            if (input.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) isValid = false;
+            input.classList.toggle('is-valid', isValid);
+            input.classList.toggle('is-invalid', !isValid);
+            return isValid;
+        }
+
+        // ============================================
+        // BACK TO TOP
+        // ============================================
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            backToTopBtn.classList.toggle('show', window.pageYOffset > 300);
+        });
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ============================================
+        // NOTIFICATION SYSTEM
+        // ============================================
+        function showNotification(message, type = 'info') {
+            document.querySelector('.custom-notification')?.remove();
+            const notification = document.createElement('div');
+            notification.className = `custom-notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            Object.assign(notification.style, {
+                position: 'fixed', top: '20px', right: '20px',
+                background: type === 'success' ? '#28a745' : '#17a2b8',
+                color: 'white', padding: '1rem 1.5rem', borderRadius: '10px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: '10000',
+                animation: 'slideInRight 0.5s ease', fontWeight: '500', maxWidth: '400px'
+            });
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => notification.remove(), 500);
+            }, 4000);
+        }
+
+        // ============================================
+        // VEHICLE DETAILS MODAL
+        // ============================================
+        function showVehicleDetails(vehicleName) {
+            const backdrop = document.createElement('div');
+            Object.assign(backdrop.style, {
+                position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+                background: 'rgba(0,0,0,0.8)', zIndex: '9998', display: 'flex',
+                justifyContent: 'center', alignItems: 'center', animation: 'fadeIn 0.3s ease'
+            });
+            backdrop.innerHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 600px; width: 90%; position: relative; animation: slideInUp 0.3s ease;">
+                    <button onclick="this.closest('div').parentElement.remove()" style="position: absolute; top: 1rem; right: 1rem; background: #e94560; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.5rem;">×</button>
+                    <h2 style="color: #1a1a2e; margin-bottom: 1rem;">${vehicleName}</h2>
+                    <p style="color: #666; margin-bottom: 1.5rem;">Vielen Dank für Ihr Interesse an ${vehicleName}. Kontaktieren Sie uns für weitere Informationen.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" style="flex: 1;" onclick="window.location.href='#kontakt'">Kontakt aufnehmen</button>
+                        <button class="btn btn-outline-secondary" style="flex: 1;" onclick="this.closest('div').parentElement.remove()">Schließen</button>
+                    </div>
+                </div>
+            `;
+            backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
+            document.body.appendChild(backdrop);
+        }
+
+        // ============================================
+        // PARALLAX EFFECT
+        // ============================================
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            document.querySelectorAll('.hero-slider').forEach(el => {
+                el.style.transform = `translateY(${scrolled * 0.5}px)`;
+            });
+        });
+
+        console.log('%c Welcome to S&F Services! ', 'background: #1a1a2e; color: #e94560; font-size: 20px; padding: 10px;');
+        console.log('✅ All features initialized!');
+    </script>
+</body>
+</html>
